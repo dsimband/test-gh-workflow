@@ -24,4 +24,5 @@ The `src/sample_module.py` file contains simple arithmetic functions used in the
 test suite. It currently provides:
 
 * `add(a, b)` – return the sum of two integers.
+* `subtract(a, b)` – return the difference of two integers.
 * `multiply(a, b)` – return the product of two integers.

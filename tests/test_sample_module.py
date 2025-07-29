@@ -17,6 +17,18 @@ def test_add(a, b, expected):
 @pytest.mark.parametrize(
     "a,b,expected",
     [
+        (3, 2, 1),
+        (0, 5, -5),
+        (-1, -1, 0),
+    ],
+)
+def test_subtract(a, b, expected):
+    assert sample_module.subtract(a, b) == expected
+
+
+@pytest.mark.parametrize(
+    "a,b,expected",
+    [
         (2, 4, 8),
         (-1, 3, -3),
         (0, 5, 0),
