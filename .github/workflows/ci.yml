@@ -1,0 +1,87 @@
+name: CI
+
+permissions:
+  contents: read
+  issues: write
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pre-commit pytest
+      - name: Run pre-commit
+        run: pre-commit run --all-files --show-diff-on-failure
+      - name: Run tests
+        run: pytest
+
+  create-issue:
+    if: failure() && github.event.pull_request.head.repo.full_name == github.repository
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create or Update GitHub Issue
+        uses: actions/github-script@v7
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prAssignee = context.payload.pull_request?.user?.login || "Codex";
+            const maxAttempts = 3;
+            const title = 'Automated test failure';
+
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              labels: 'ci-failure'
+            });
+
+            if (issues.length > 0) {
+              const issue = issues[0];
+              const attemptLabel = issue.labels.find(l => /^attempt-\d+$/.test(l.name));
+              let attempt = attemptLabel ? parseInt(attemptLabel.name.split('-')[1]) + 1 : 2;
+              if (attempt > maxAttempts) {
+                await github.rest.issues.update({
+                  owner,
+                  repo,
+                  issue_number: issue.number,
+                  labels: ['ci-failure', `attempt-${attempt}`],
+                  assignees: [owner],
+                  body: `${issue.body}\nExceeded automated attempts. Handing off to human.`
+                });
+              } else {
+                await github.rest.issues.update({
+                  owner,
+                  repo,
+                  issue_number: issue.number,
+                  labels: ['ci-failure', `attempt-${attempt}`],
+                  assignees: [prAssignee],
+                  body: `${issue.body}\nCI run ${context.runId} failed again (attempt ${attempt}).`
+                });
+              }
+            } else {
+              await github.rest.issues.create({
+                owner,
+                repo,
+                title,
+                body: `CI run ${context.runId} failed. Please investigate.`,
+                assignees: [prAssignee],
+                labels: ['ci-failure', 'attempt-1']
+              });
+            }
