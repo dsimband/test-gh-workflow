@@ -1,6 +1,6 @@
 # AGENTS instructions
 
-After completing code generation and committing all changes, use the `make_pr` tool to submit a pull request.
+After completing code generation automatically commit all changes, use the `make_pr` tool to submit a pull request.
 Use the following text for the PR:
 
 Title: "Add AGENTS.md for PR automation"
