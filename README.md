@@ -17,3 +17,11 @@ Unit tests are located in the `tests/` directory and can be executed with:
 ```bash
 pytest
 ```
+
+## Sample Module
+
+The `src/sample_module.py` file contains simple arithmetic functions used in the
+test suite. It currently provides:
+
+* `add(a, b)` – return the sum of two integers.
+* `multiply(a, b)` – return the product of two integers.
