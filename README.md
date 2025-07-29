@@ -26,3 +26,8 @@ test suite. It currently provides:
 * `add(a, b)` – return the sum of two integers.
 * `subtract(a, b)` – return the difference of two integers.
 * `multiply(a, b)` – return the product of two integers.
+
+## Continuous Integration
+
+Automated tests run via GitHub Actions whenever commits are pushed or pull requests are opened against `main`. The workflow is defined in `.github/workflows/ci.yml` and installs dependencies, runs `pre-commit`, and executes the test suite.
+
