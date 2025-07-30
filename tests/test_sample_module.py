@@ -53,3 +53,15 @@ def test_divide(a, b, expected):
 def test_divide_by_zero():
     with pytest.raises(ValueError):
         sample_module.divide(1, 0)
+
+
+@pytest.mark.parametrize(
+    "a,b,expected",
+    [
+        (2, 3, 8),
+        (5, 0, 1),
+        (3, 2, 9),
+    ],
+)
+def test_power(a, b, expected):
+    assert sample_module.power(a, b) == expected
