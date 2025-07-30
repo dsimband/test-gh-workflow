@@ -36,4 +36,3 @@ def test_subtract(a, b, expected):
 )
 def test_multiply(a, b, expected):
     assert sample_module.multiply(a, b) == expected
-

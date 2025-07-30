@@ -1,4 +1,4 @@
-# Agents.md – Codex Agent Build Instructions
+# Agents.md – Codex Agent Build Instructions
 
 ## Goal
 
@@ -10,6 +10,7 @@ Automate the generation, validation, and documentation of AI Agents’ source co
    • Use the current prompt and context to produce the necessary code changes.
 2. **Self‑Review**
    • Diff the working tree; comment inline on risky or untested sections.
+   • **Run linting / formatter checks** (e.g., `ruff`, `black`, `eslint`, `prettier`) and fail the step on any violations.
    • Ensure style, security, and dependency hygiene rules are respected.
 3. **Run Full Test Suite** (`pytest -q` or project‑specific runner).
 4. **Decision Gate**
