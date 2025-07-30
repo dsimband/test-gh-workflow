@@ -42,6 +42,20 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const prAssignee = context.payload.pull_request?.user?.login || "Codex";
+            const commitSha = context.payload.pull_request?.head?.sha;
+            let codeAssignee = prAssignee;
+            if (commitSha) {
+              try {
+                const { data: commit } = await github.rest.repos.getCommit({
+                  owner,
+                  repo,
+                  ref: commitSha,
+                });
+                codeAssignee = commit.author?.login || prAssignee;
+              } catch (error) {
+                core.warning(`Failed to fetch commit info: ${error}`);
+              }
+            }
             const maxAttempts = 3;
             const title = 'Automated test failure';
 
@@ -71,7 +85,7 @@ jobs:
                   repo,
                   issue_number: issue.number,
                   labels: ['ci-failure', `attempt-${attempt}`],
-                  assignees: [prAssignee],
+                  assignees: [codeAssignee],
                   body: `${issue.body}\nCI run ${context.runId} failed again (attempt ${attempt}).`
                 });
               }
@@ -81,7 +95,7 @@ jobs:
                 repo,
                 title,
                 body: `CI run ${context.runId} failed. Please investigate.`,
-                assignees: [prAssignee],
+                assignees: [codeAssignee],
                 labels: ['ci-failure', 'attempt-1']
               });
             }
