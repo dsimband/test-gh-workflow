@@ -24,7 +24,10 @@ jobs:
           pip install -r requirements.txt
           pip install pre-commit pytest
       - name: Run pre-commit
-        run: pre-commit run --all-files --show-diff-on-failure
+        uses: pre-commit/action@v3.0.1
+      - name: Auto-commit pre-commit fixes
+        uses: pre-commit-ci/lite-action@v1.1.0
+        if: always()
       - name: Run tests
         run: pytest
 
