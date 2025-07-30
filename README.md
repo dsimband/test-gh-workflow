@@ -26,6 +26,7 @@ test suite. It currently provides:
 * `add(a, b)` – return the sum of two integers.
 * `subtract(a, b)` – return the difference of two integers.
 * `multiply(a, b)` – return the product of two integers.
+* `divide(a, b)` – return the quotient of two integers, raising ``ValueError`` when dividing by zero.
 
 ## Continuous Integration
 

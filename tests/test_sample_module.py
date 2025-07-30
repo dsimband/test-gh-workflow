@@ -36,3 +36,20 @@ def test_subtract(a, b, expected):
 )
 def test_multiply(a, b, expected):
     assert sample_module.multiply(a, b) == expected
+
+
+@pytest.mark.parametrize(
+    "a,b,expected",
+    [
+        (4, 2, 2.0),
+        (-3, -3, 1.0),
+        (5, 2, 2.5),
+    ],
+)
+def test_divide(a, b, expected):
+    assert sample_module.divide(a, b) == expected
+
+
+def test_divide_by_zero():
+    with pytest.raises(ValueError):
+        sample_module.divide(1, 0)

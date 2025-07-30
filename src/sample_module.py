@@ -17,3 +17,10 @@ def subtract(a: int, b: int) -> int:
 def multiply(a: int, b: int) -> int:
     """Return product of ``a`` and ``b``."""
     return a * b
+
+
+def divide(a: int, b: int) -> float:
+    """Return quotient of ``a`` and ``b``."""
+    if b == 0:
+        raise ValueError("b must not be zero")
+    return a / b
